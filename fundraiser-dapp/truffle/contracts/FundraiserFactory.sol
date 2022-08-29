@@ -39,13 +39,21 @@ contract FundraiserFactory {
     }
 
     function fundraisers(uint256 limit, uint256 offset) public view returns(Fundraiser[] memory coll) {
+        require(offset <= fundraisersCount(), "offset out of bounds");
+
         // size should be the smaller of the count or the limit
-        uint256 size = fundraisersCount() < limit ? fundraisersCount() : limit;
+        uint256 size = fundraisersCount() - offset;
+
+        size = size < limit ? size : limit;
 
         // size should not exceed the maxlimit
         size = size < maxlimit ? size : maxlimit;
-        
+
         coll = new Fundraiser[](size);
+
+        for (uint256 i = 0; i < size; i++) {
+            coll[i] = _fundraisers[offset + i];
+        }
         return coll;
     }
 }

@@ -17,6 +17,7 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
+const path = require("path");
 
 require('dotenv').config();
 // const mnemonic = process.env["MNEMONIC"];
@@ -35,7 +36,7 @@ module.exports = {
    * $ truffle test --network <network-name>
    */
 
-  contracts_build_directory: "../client/src/contracts",
+  contracts_build_directory: path.join(__dirname,"client/src/contracts"),
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
