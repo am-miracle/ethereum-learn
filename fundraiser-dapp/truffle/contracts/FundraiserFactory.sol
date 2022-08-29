@@ -8,6 +8,9 @@ import './Fundraiser.sol';
 contract FundraiserFactory {
     Fundraiser[] private _fundraisers;
 
+    // most items that can be returned from the fundraisers function
+    uint256 constant maxlimit = 20;
+
     event FundraiserCreated(Fundraiser indexed fundraiser);
     // event FundraiserCreated(Fundraiser indexed fundraiser, address indexed owner);
 
@@ -36,6 +39,13 @@ contract FundraiserFactory {
     }
 
     function fundraisers(uint256 limit, uint256 offset) public view returns(Fundraiser[] memory coll) {
+        // size should be the smaller of the count or the limit
+        uint256 size = fundraisersCount() < limit ? fundraisersCount() : limit;
+
+        // size should not exceed the maxlimit
+        size = size < maxlimit ? size : maxlimit;
+        
+        coll = new Fundraiser[](size);
         return coll;
     }
 }
