@@ -16,6 +16,7 @@ contract Fundraiser is Ownable {
     mapping (address => Donation[]) private _donations;
 
     event DonationReceived(address indexed donor, uint256 value);
+    event Withdraw(uint256 amount);
 
     string public name;
     string public url;
@@ -81,6 +82,25 @@ contract Fundraiser is Ownable {
 
     // withdraw function
     function withdraw() public onlyOwner {
-        
+        uint256 balance = address(this).balance;
+        beneficiary.transfer(balance);
+
+        emit Withdraw(balance);
+    }
+
+    // fallback functions -
+    /* Fallback functions are functions that are unnamed and will supply the default behav‐
+    ior in the event that the contract receives ether through a plain transaction or if the
+    contract is called with a method signature that does not match any of the defined
+    functions.
+    */
+
+    fallback() external payable {
+        totalDonations = totalDonations.add(msg.value);
+        donationsCount++;
+    }
+    receive() external payable {
+        totalDonations = totalDonations.add(msg.value);
+        donationsCount++;
     }
 }

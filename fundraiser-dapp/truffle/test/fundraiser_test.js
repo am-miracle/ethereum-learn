@@ -136,6 +136,48 @@ contract("Fundraiser", accounts => {
                     assert.fail("should not have thrown an error");
                 }
             });
-         });
+            it("transfers balance to beneficiary", async () => {
+                const currentContractBalance = await web3.eth.getBalance(fundraiser.address);
+                const currentBeneficiaryBalance = await web3.eth.getBalance(beneficiary);
+
+                await fundraiser.withdraw({from: owner});
+
+                const newContractBalance = await web3.eth.getBalance(fundraiser.address);
+                const newBeneficiaryBalance = await web3.eth.getBalance(beneficiary);
+                const beneficiaryDifference = newBeneficiaryBalance - currentBeneficiaryBalance;
+
+                assert.equal(newContractBalance, 0, "contract should have a 0 balance");
+                assert.equal(beneficiaryDifference, currentContractBalance,"beneficiary should receive all the funds")
+            });
+            it("emits Withdraw event", async () => {
+                const tx = await fundraiser.withdraw({from: owner});
+                const expectedEvent = "Withdraw";
+                const actualEvent = tx.logs[0].event;
+
+                assert.equal(actualEvent, expectedEvent, "events should match")
+            })
+        });
     });
+    describe("fallback function", () => {
+        const value = web3.utils.toWei('0.0289');
+
+        it("increases the totalDonations amount", async () => {
+            const currentTotalDonations = await fundraiser.totalDonations();
+            await web3.eth.sendTransaction({to: fundraiser.address, from: accounts[9], value});
+
+            const newTotalDonations = await fundraiser.totalDonations();
+
+            const diff = newTotalDonations - currentTotalDonations;
+
+            assert.equal(diff, value, "difference should match the donation value")
+        });
+        it("increases donationsCount", async () => {
+            const currentDonationsCount = await fundraiser.donationsCount();
+            await web3.eth.sendTransaction({to: fundraiser.address, from: accounts[9], value});
+
+            const newDonationsCount = await fundraiser.donationsCount();
+
+            assert.equal(1, newDonationsCount - currentDonationsCount,"donationsCount should increment by 1");
+        });
+    })
 });
