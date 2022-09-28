@@ -68,13 +68,13 @@ module.exports = {
     //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     // },
 
-      goerli: {
-        provider: () => {
-          // const mnemonic = ""
-          return new HDWalletProvider(mnemonic, "http://127.0.0.1:8545");
-        },
-        network_id: "*",
+    goerli: {
+      provider: () => {
+        const mnemonic = process.env.MNEMONIC
+        return new HDWalletProvider(mnemonic, "http://127.0.0.1:8545");
       },
+      network_id: "*",
+    },
     //
     // Useful for private networks
     // private: {
