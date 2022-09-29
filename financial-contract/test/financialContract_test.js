@@ -17,7 +17,7 @@ contract("FinancialContract", () => {
 
 contract("FinancialContract: update value", () => {
     describe("setValue(uint256)", () => {
-        it("sets value to passed in uint256", async () => {
+        it("the passed-in uint256 value is set", async () => {
             const finance = await FinancialContract.deployed()
             const expected = 15;
             await finance.setValue(expected);
