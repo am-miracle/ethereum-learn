@@ -4,6 +4,9 @@ This box comes with everything you need to start using Truffle to write, compile
 
 ## Installation
 
+- ed030b2f475588b5d29503be351024a99663dbefdd487e6bdde8cf7a4f0c113f
+- 0x5627c51b21350eae1a792b59a9c5b85c8120bcb8
+
 First ensure you are in an empty directory.
 
 Run the `unbox` command using 1 of 2 ways.
